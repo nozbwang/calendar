@@ -1,0 +1,79 @@
+#set($layout = "pages/common/empty.vm")
+<base href="${rc.contextPath}/"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>galary</title>
+
+<script src="dist/js/timestamp.js?_t"></script>
+
+<!-- font awesome -->
+<link rel="stylesheet" href="cdn/cdnjs/cloudflare/com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<!-- bootstrap -->
+<link rel="stylesheet" href="plugins/galary/bootstrap/css/bootstrap.min.css" />
+<!-- animate.css -->
+<link rel="stylesheet" href="plugins/galary/animate/animate.css" />
+<link rel="stylesheet" href="plugins/galary/animate/set.css" />
+<!-- gallery -->
+<link rel="stylesheet" href="plugins/galary/gallery/blueimp-gallery.min.css">
+
+<script>
+    timestampCss("plugins/galary/style.css");
+</script>
+
+</head>
+
+<body>
+
+<a href="galary/add?belongType=$!belongTypeEnum.type" class="btn btn-primary btn-block"><b>添加图片($!belongTypeEnum.name)</b></a>
+
+<!-- works -->
+<div class=" clearfix grid">
+    #foreach($attachId in $!attachIds)
+        <figure class="wowload fadeInUp img-box">
+            <div class="img-content">
+                <a class="img-cnt" href="attach/454/picture.jpg" data-gallery><img class="lazy" data-src="attach/${attachId}/picture.jpg" alt="img01"/></a>
+            </div>
+        </figure>
+    #end
+</div>
+<!-- works -->
+
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title">Title</h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->    
+</div>
+
+<!-- jquery -->
+<script src="plugins/galary/jquery.js"></script>
+<script src="dist/js/lazy.js"></script>
+
+<!-- wow script -->
+<script src="plugins/galary/wow/wow.min.js"></script>
+
+
+<!-- boostrap -->
+<script src="plugins/galary/bootstrap/js/bootstrap.js" type="text/javascript" ></script>
+
+<!-- jquery mobile -->
+<script src="plugins/galary/mobile/touchSwipe.min.js"></script>
+<script src="plugins/galary/respond/respond.js"></script>
+
+<!-- gallery -->
+<script src="plugins/galary/gallery/jquery.blueimp-gallery.min.js"></script>
+
+<!-- custom script -->
+<script src="plugins/galary/script.js"></script>
+
+</body>
+</html>

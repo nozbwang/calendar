@@ -1,0 +1,147 @@
+ #set($layout = "pages/common/home.vm")  
+ #set($title = "Book")  
+#set($sider = "book")
+ <base href="${rc.contextPath}/"/>
+ 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Book
+        <small>13 new books</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Book</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+	   <div class="col-md-3">
+          <a href="book/add?readFlagS=$!{param.readFlagS}&buyFlagS=$!{param.buyFlagS}&bookTypeS=$!{param.bookTypeS}" class="btn btn-primary btn-block margin-bottom">添加书籍</a>
+		  #parse("pages/common/book_sider.vm")  
+          <!-- /.box -->
+       </div>
+		
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">My Book</h3>
+
+              <div class="box-tools pull-right">
+                <div class="has-feedback">
+				 <input type="hidden" id="J-buyFlagS" value="$!param.buyFlagS">
+				 <input type="hidden" id="J-readFlagS" value="$!param.readFlagS">
+				 <input type="hidden" id="J-bookTypeS" value="$!param.bookTypeS">
+                  <input type="text" class="form-control input-sm" value="$!param.keyword" placeholder="通过书名或者作者搜索" id="J-keyword">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+                <!-- /.post -->
+                <div class="col-sm-12">
+				<div class="">
+    				#foreach($book in $!books)
+    					#if($!book.cover)
+    						 <div class="col-sm-3 margin-between pull-left "  style="height: 200px">
+    							<a href="book/detail/$book.bookId?readFlagS=$!{param.readFlagS}&buyFlagS=$!{param.buyFlagS}&bookTypeS=$!{param.bookTypeS}">
+        							<img class="img-responsive lazy" alt="$book.bookTitle"
+        								data-src="attach/${book.cover.attachmentId}/${book.cover.attachmentName}"/>
+    							</a>
+        					  </div>
+    					#else
+    						<div class="col-sm-3 margin-between" style="height: 200px">
+    							<a href="book/detail/$book.bookId?readFlagS=$!{param.readFlagS}&buyFlagS=$!{param.buyFlagS}&bookTypeS=$!{param.bookTypeS}" target="_blank">
+    								<div class="img-responsive">$book.bookTitle </div>
+    							</a>
+        				   </div>
+    					#end
+				#end
+                         </div>
+                 </div>
+				 <!-- /. box -->
+			</div>
+		  </div>
+	    </div>
+        <!-- /.col -->
+	</div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<!-- jQuery 2.2.3 -->
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="cdn/code/jquery/com/ui/1.11.4/jquery-ui.min.js"></script>
+<!-- iCheck -->
+<script src="plugins/iCheck/icheck.min.js"></script>
+ <script>
+     timestampScript("dist/js/lazy.js");
+ </script>
+<!-- Page Script -->
+<script>
+  $(function () {
+   $("#J-keyword").bind('keypress',function(event){  
+      if(event.keyCode == "13") {
+       var keyword = $("#J-keyword").val();
+       var buyFlagS = $("#J-buyFlagS").val();
+       var readFlagS = $("#J-readFlagS").val();
+       var bookTypeS = $("#J-bookTypeS").val();
+        var url = "book/search?buyFlagS="+buyFlagS+"&keyword="+keyword+"&readFlagS="+readFlagS+"&bookTypeS="+bookTypeS;
+       window.location.href = url;
+	   }
+	});
+
+	//Enable iCheck plugin for checkboxes
+    //iCheck for checkbox and radio inputs
+    $('.mailbox-messages input[type="checkbox"]').iCheck({
+      checkboxClass: 'icheckbox_flat-blue',
+      radioClass: 'iradio_flat-blue'
+    });
+
+    //Enable check and uncheck all functionality
+    $(".checkbox-toggle").click(function () {
+      var clicks = $(this).data('clicks');
+      if (clicks) {
+        //Uncheck all checkboxes
+        $(".mailbox-messages input[type='checkbox']").iCheck("uncheck");
+        $(".fa", this).removeClass("fa-check-square-o").addClass('fa-square-o');
+      } else {
+        //Check all checkboxes
+        $(".mailbox-messages input[type='checkbox']").iCheck("check");
+        $(".fa", this).removeClass("fa-square-o").addClass('fa-check-square-o');
+      }
+      $(this).data("clicks", !clicks);
+    });
+
+    //Handle starring for glyphicon and font awesome
+    $(".mailbox-star").click(function (e) {
+      e.preventDefault();
+      //detect type
+      var $this = $(this).find("a > i");
+      var glyph = $this.hasClass("glyphicon");
+      var fa = $this.hasClass("fa");
+
+      //Switch states
+      if (glyph) {
+        $this.toggleClass("glyphicon-star");
+        $this.toggleClass("glyphicon-star-empty");
+      }
+
+      if (fa) {
+        $this.toggleClass("fa-star");
+        $this.toggleClass("fa-star-o");
+      }
+    });
+  });
+</script>

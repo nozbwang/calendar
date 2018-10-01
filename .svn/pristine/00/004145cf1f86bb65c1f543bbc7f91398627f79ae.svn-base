@@ -1,0 +1,19 @@
+package com.zbwang.calendar.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("")
+public class HomeController extends AbstractController {
+
+	@RequestMapping({ "" })
+	public String calendar() {
+		return redirectTo("/voice");
+	}
+
+	@RequestMapping("/modal")
+	public String modal() {
+		return "pages/ui/modals";
+	}
+}

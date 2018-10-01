@@ -1,0 +1,94 @@
+package com.zbwang.calendar.controller;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zbwang.calendar.constant.NamedThreadFactory;
+import com.zbwang.calendar.domain.Attach;
+import com.zbwang.calendar.service.IAttachService;
+
+@Controller
+@RequestMapping("/attach")
+public class PictureController extends AbstractController {
+
+	@Autowired
+	private IAttachService faceVoiceAttachService;
+	private static final ExecutorService compressThreadPool = Executors.newFixedThreadPool(1, new NamedThreadFactory("compress"));
+
+	@RequestMapping("/original/{attachId}/*")
+	public void getOriginalAttach(@PathVariable Integer attachId, HttpServletResponse response) throws Exception {
+		Attach faceVoiceAttach = faceVoiceAttachService.getOriginalAttachByAttachId(attachId);
+		if (faceVoiceAttach != null) {
+			response.setContentType("image/png");
+			writeToBrowser(response, faceVoiceAttach.getContent());
+		}
+	}
+
+	@RequestMapping("/big/{attachId}/*")
+	public void bigFile(@PathVariable Integer attachId, HttpServletResponse response) throws Exception {
+		Attach faceVoiceAttach = faceVoiceAttachService.getBigAttachByAttachId(attachId);
+		if (faceVoiceAttach != null) {
+			response.setContentType("image/png");
+			writeToBrowser(response, faceVoiceAttach.getBigContent());
+		}
+	}
+
+	@RequestMapping("/small/{attachId}/*")
+	public void smallFile(@PathVariable Integer attachId, HttpServletResponse response) throws Exception {
+		Attach faceVoiceAttach = faceVoiceAttachService.getSmallAttachByAttachId(attachId);
+		if (faceVoiceAttach != null) {
+			response.setContentType("image/png");
+			writeToBrowser(response, faceVoiceAttach.getSmallContent());
+		}
+	}
+
+	private void writeToBrowser(HttpServletResponse response, byte[] content) throws IOException {
+		ByteArrayInputStream in = null;
+		OutputStream out = null;
+		try {
+			in = new ByteArrayInputStream(content);
+			out = response.getOutputStream();
+			byte buffer[] = new byte[1024];
+			int len = 0;
+			while ((len = in.read(buffer)) > 0) {
+				out.write(buffer, 0, len);
+			}
+		}
+		finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
+		}
+	}
+
+	@PostConstruct
+	public void startCompressPictureMonitor() {
+		compressThreadPool.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						TimeUnit.SECONDS.sleep(60 * 10);
+						faceVoiceAttachService.compressPicture();
+					}
+					catch (Exception e) {
+						serviceLog.error("Fail to compress Picture.", e);
+					}
+				}
+			}
+		});
+	}
+}

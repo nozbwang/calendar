@@ -1,0 +1,310 @@
+ #set($layout = "pages/common/home.vm")  
+ #set($title = "Voice")  
+ #set($sider = "voice")
+ <base href="${rc.contextPath}/"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Voice
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Voice</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <div class="row">
+        <div class="col-md-3">
+
+          <!-- Profile Image -->
+          <div class="box box-primary">
+            <div class="box-body box-profile">
+              <img class="profile-user-img img-responsive img-circle" src="dist/img/meilin.jpg" alt="User profile picture">
+
+              <h3 class="profile-username text-center">Meilin</h3>
+
+              <p class="text-muted text-center">Software Test Engineer</p>
+
+              <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>Followers</b> <a class="pull-right">1,322</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Following</b> <a class="pull-right">543</a>
+                </li>
+                <li class="list-group-item">
+                  <b>Friends</b> <a class="pull-right">13,287</a>
+                </li>
+              </ul>
+
+              <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+          <!-- About Me Box -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">About Me</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+
+              <p class="text-muted">
+                B.S. in Computer Science from the University of Tennessee at Knoxville
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+
+              <p class="text-muted">Malibu, California</p>
+
+              <hr>
+
+              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+
+              <p>
+                <span class="label label-danger">UI Design</span>
+                <span class="label label-success">Coding</span>
+                <span class="label label-info">Javascript</span>
+                <span class="label label-warning">PHP</span>
+                <span class="label label-primary">Node.js</span>
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
+
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+				<a id="voiceClick" href="javascript:void(0);" class="btn btn-primary btn-block"><b>发声</b></a>
+				<br>
+            <!--   <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
+             <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
+              <li><a href="#settings" data-toggle="tab">Settings</a></li>
+			  --> 
+            </ul>
+            <div class="tab-content">
+              <div class="active tab-pane" id="activity">
+				
+				<input type="hidden" id="userImg"  #if($!user.userId ==  2) value="dist/img/bobo.jpg" #else value="dist/img/meilin.jpg" #end >
+				<input type="hidden" id="userName"  #if($!user.userId ==  2) value="Bobo" #else value="Meilin" #end >
+				
+				#foreach($voice in $voices)
+                <!-- Post -->
+                <div class="post" >
+                  <div class="user-block">
+						<img class="img-circle img-bordered-sm" #if($!voice.userId ==  2) src="dist/img/bobo.jpg" #else src="dist/img/meilin.jpg" #end alt="user image">
+                        <span class="username">
+                          <a href="#">#if($!voice.userId ==  2) Bobo #else Meilin #end</a>
+                        </span>
+                    <span class="description">$voice.formattedAddTime</span>
+                  </div>
+                  <!-- /.user-block -->
+                  <p>
+                   $voice.formatVoice
+                  </p>
+				  #if($voice.faceVoiceAttachs)
+				  <div class="row margin-bottom">
+					<div class="col-sm-6">
+        				#foreach($attach in $voice.faceVoiceAttachs)
+							<a href="attach/big/${attach.attachmentId}/${attach.attachmentName}" target="_blank">
+    						<img class="img-responsive" src="attach/small/${attach.attachmentId}/${attach.attachmentName}" alt="Photo"/>
+                            </a>
+        				 #end
+                     </div>
+                  </div>
+				  #end
+                  <ul class="list-inline">
+                    <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
+                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
+                    </li>
+                    <li class="pull-right">
+                      <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments($!voice.comments.size())</a>
+					</li>
+					<div class="box-footer box-comments" #if(!$voice.comments) style="display:none" #end>
+					  #foreach($comment in $voice.comments)
+                      <div class="box-comment"> 
+                        <img class="img-circle img-sm" #if($!comment.userId ==  2) src="dist/img/bobo.jpg" #else src="dist/img/meilin.jpg" #end alt="User Image">
+                        <div class="comment-text">
+                              <span class="username">
+								#if($!comment.userId ==  2) Bobo #else Meilin #end 
+								<span class="text-muted pull-right">$comment.formattedAddTime</span>
+                              </span><!-- /.username -->
+							  $comment.formatVoice
+                        </div>
+                      </div>
+					  #end
+				    </div>
+                  </ul>
+                  <div class="input-group">
+    					<textarea name="comment" class="form-control" rows="1" placeholder="Type message..."></textarea>
+                        <div class="input-group-btn">
+    					  <button type="button" data-id="${voice.voiceId}" class="J-comment btn btn-info active btn-flat"><i class="fa fa-fw fa-comment-o"></i></button>
+                        </div>
+				  </div>
+                </div>
+                <!-- /.post -->
+				#end
+
+                <!-- Post -->
+                <div class="post">
+                  <div class="user-block">
+                    <img class="img-circle img-bordered-sm" src="dist/img/bobo.jpg" alt="User Image">
+                        <span class="username">
+                          <a href="#">Bobo</a>
+                          <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
+                        </span>
+                    <span class="description">Posted 5 photos - 5 days ago</span>
+                  </div>
+                  <!-- /.user-block -->
+                  <div class="row margin-bottom">
+                    <div class="col-sm-6">
+                      <img class="img-responsive" src="dist/img/photo1.png" alt="Photo">
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-sm-6">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <img class="img-responsive" src="dist/img/photo2.png" alt="Photo">
+                          <br>
+                          <img class="img-responsive" src="dist/img/photo3.jpg" alt="Photo">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-6">
+                          <img class="img-responsive" src="dist/img/photo4.jpg" alt="Photo">
+                          <br>
+                          <img class="img-responsive" src="dist/img/photo1.png" alt="Photo">
+                        </div>
+                        <!-- /.col -->
+                      </div>
+                      <!-- /.row -->
+                    </div>
+                    <!-- /.col -->
+                  </div>
+                  <!-- /.row -->
+
+                  <ul class="list-inline">
+                    <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
+                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
+                    </li>
+                    <li class="pull-right">
+                      <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
+                        (5)</a></li>
+                  </ul>
+
+                  <input class="form-control input-sm" type="text" placeholder="Type a comment">
+                </div>
+                <!-- /.post -->
+              </div>
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  
+  <!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<!-- general form elements -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Make a Voice</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form"  id="voiceForm" action="${rc.contextPath}/voice/insertVoice" method="POST" enctype="multipart/form-data">
+              <div class="box-body">
+                <div class="form-group">
+                  <label>Voice</label>
+                  <textarea name="voice" class="form-control" rows="5" placeholder="Enter ..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputFile">File input</label>
+                  <input type="file" name="file" id="exampleInputFile">
+                  <p class="help-block">Only Pictures are allowed.</p>
+                </div>
+              </div>
+              <div class="box-footer">
+				<button type="submit" id="voiceCancel" class="btn btn-default" >Cancel</button>
+                <button type="submit" id="voiceAdd" class="btn btn-primary pull-right">Submit</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.box -->
+       </div>
+    </div>
+</div>
+
+<!-- jQuery 2.2.3 -->
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="cdn/code/jquery/com/ui/1.11.4/jquery-ui.min.js"></script>
+
+<script>
+
+$("#voiceClick").click(function(){
+  		$('#myModal').modal("show");
+	});
+	
+$("#voiceCancel").click(function(){
+		event.preventDefault();
+  		$('#myModal').modal("hide");
+	});
+	
+$("#voiceAdd").click(function(){
+		$("#voiceForm").submit();
+		$('#myModal').modal("hide");
+		window.location.href="voice";
+	});
+	
+$(".J-comment").click(function(){
+		var textarea= $(this).parent().parent().find("textarea");
+		var comment = textarea.val();
+		var userImg = $('#userImg').val();
+		var userName = $('#userName').val();
+		$.ajax({
+          type: "POST",
+          url: "voice/insertComment",
+          data: {voiceId:$(this).data("id"),comment:textarea.val()},
+          dataType: "json",
+          success: function(data){
+          	 if(data.success){
+          		textarea.val("");
+				var html='<div class="box-comment"> <img class="img-circle img-sm" src="'+userImg+'" alt="User Image">';
+				html += '<div class="comment-text"><span class="username">'+userName+'<span class="text-muted pull-right">'+data.content+'</span>';
+                html += '</span>'+comment+' </div></div>';
+				html=html;
+				textarea.parent().parent().find(".list-inline").find(".box-comments").css('display','block');
+				textarea.parent().parent().find(".list-inline").find(".box-comments").append(html);
+	         }
+          }
+        });
+	});
+</script>

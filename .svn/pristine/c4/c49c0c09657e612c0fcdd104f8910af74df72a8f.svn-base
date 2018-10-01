@@ -1,0 +1,26 @@
+package com.zbwang.calendar.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.zbwang.calendar.domain.Attach;
+
+public interface IAttachDao {
+
+	Attach getOriginalAttachByAttachId(Integer attachId);
+
+	Attach getBigAttachByAttachId(Integer attachId);
+
+	Attach getSmallAttachByAttachId(Integer attachId);
+
+	List<Attach> getAttachByBelongIdGroup(@Param("belongType") String belongType, @Param("belongIds") List<Integer> belongIds);
+
+	void insertVoiceAttach(Attach faceVoiceAttach);
+
+	void deleteLocalPicture(Attach faceVoiceAttach);
+
+	List<Attach> getAttachNeedCompress();
+
+	void updateAttachContentByAttachId(Attach compresssedAttach);
+}

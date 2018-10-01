@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zbwang.calendar.dao.IBookDao">
+  <resultMap id="BaseResultMap" type="com.zbwang.calendar.domain.Book">
+    <id column="book_id" jdbcType="INTEGER" property="bookId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="book_title" jdbcType="VARCHAR" property="bookTitle" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="book_detail" jdbcType="VARCHAR" property="bookDetail" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="book_type" jdbcType="VARCHAR" property="bookType" />
+    <result column="buy_flag" jdbcType="SMALLINT" property="buyFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    book_id, user_id, book_title, author, book_detail, add_time, update_time, book_type,buy_flag
+  </sql>
+  <select id="listAllBooks" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from face_book
+    order by update_time desc
+  </select>
+  <select id="searchBooks" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from face_book
+     <where>  
+    	<if test="param.keyword != null">
+   		(author LIKE CONCAT('%',#{param.keyword,jdbcType=VARCHAR},'%') OR 
+   		book_title LIKE CONCAT('%',#{param.keyword,jdbcType=VARCHAR},'%') ) 
+   		</if>
+   		<if test="param.buyFlag != null">
+    	AND buy_flag = #{param.buyFlag,jdbcType=SMALLINT}
+    	</if>
+    	<if test="param.bookType != null">
+    	AND book_type = #{param.bookType,jdbcType=VARCHAR}
+    	</if>
+    	<if test="param.searchReadBook() and param.haveReadBooks()" >
+    	 AND
+    	 <foreach collection="param.readBookIds" item="readBookId" open="(" separator="or" close=")">
+	   	 	book_id = #{readBookId,jdbcType=INTEGER}
+	  	 </foreach>
+    	</if>
+    	<if test="param.searchUnReadBook() and param.haveReadBooks()" >
+    	 AND
+    	 <foreach collection="param.readBookIds" item="readBookId" open="(" separator="and" close=")">
+	   	 	book_id != #{readBookId,jdbcType=INTEGER}
+	  	 </foreach>
+	  	 </if>
+   	</where>
+   	order by update_time desc
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from face_book
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteBook" parameterType="java.lang.Integer">
+    delete from face_book
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zbwang.calendar.domain.Book">
+    <selectKey keyProperty="bookId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into face_book (user_id, book_title, author, 
+      book_detail, add_time, update_time, 
+      book_type,buy_flag)
+    values (#{userId,jdbcType=INTEGER}, #{bookTitle,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{bookDetail,jdbcType=VARCHAR}, now(),now(), #{bookType,jdbcType=VARCHAR},#{buyFlag,jdbcType=SMALLINT})
+  </insert>
+  <update id="updateBook" parameterType="com.zbwang.calendar.domain.Book">
+    update face_book
+    set
+      book_title = #{bookTitle,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      book_detail = #{bookDetail,jdbcType=VARCHAR},
+      update_time = now(),
+      book_type = #{bookType,jdbcType=VARCHAR}
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </update>
+  <update id="updateBookBuyFlag" parameterType="com.zbwang.calendar.domain.Book">
+    update face_book
+    set
+      update_time = now(),
+      buy_flag = #{buyFlag,jdbcType=INTEGER}
+    where book_id = #{bookId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,17 @@
+.margin-between {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.margin-hr {
+  margin:0 10px;
+}
+
+.book-img {
+    margin: 0 auto;
+    border: 3px solid #d2d6de
+}
+
+.rich-text blockquote{
+	border-left: 5px #eeeeee;
+}

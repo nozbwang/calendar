@@ -1,0 +1,55 @@
+<div class="box box-solid">
+    <div class="box-header with-border">
+      <h3 class="box-title">书架</h3>
+      <div class="box-tools">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-body no-padding">
+		<ul class="nav nav-pills nav-stacked">
+	
+    	#if(!$!param)
+    		#set($allBook=true)
+    	#elseif((!$!param.readFlag || $!param.readFlag =='' ) && (!$!param.buyFlag || $!param.buyFlag =='' ))
+    		#set($allBook=true)
+		#end	
+	
+        <li #if($allBook) class="active" #end><a href="book"><i class="fa fa-circle text-red"></i> 所有图书
+          <span class="label label-primary pull-right">$!bookNumber.totalNumber</span></a></li>
+    	<li #if($!param && $!param.buyFlag=='1') class="active" #end><a href="book/search?buyFlag=1&readFlag=$!{param.readFlag}&bookType=$!{param.bookType}"><i class="fa fa-circle text-green"></i> 已购
+          <span class="label label-primary pull-right" id="J-buy-number">$!bookNumber.buyNumber</span></a></li>
+    	<li #if($!param && $!param.buyFlag=='0') class="active" #end><a href="book/search?buyFlag=0&readFlag=$!{param.readFlag}&bookType=$!{param.bookType}"><i class="fa fa-circle-o text-green"></i> 未购
+          <span class="label label-primary pull-right" id="J-unbuy-number">$!bookNumber.wantNumber</span></a></li>
+        <li #if($!param && $!param.readFlag=='1') class="active" #end><a href="book/search?readFlag=1&buyFlag=$!{param.buyFlag}&bookType=$!{param.bookType}"><i class="fa fa-circle text-yellow"></i> 已读
+          <span class="label label-primary pull-right" id="J-read-number">$!bookNumber.readNumber</span></a></li>
+        <li #if($!param && $!param.readFlag=='0') class="active" #end><a href="book/search?readFlag=0&buyFlag=$!{param.buyFlag}&bookType=$!{param.bookType}"><i class="fa fa-circle-o text-yellow"></i> 未读
+          <span class="label label-primary pull-right" id="J-unread-number">$!bookNumber.unreadNumber</span></a></li>
+      </ul>
+    </div>
+    <!-- /.box-body -->
+</div>
+<!-- /.box -->
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+      <h3 class="box-title">类别</h3>
+      <div class="box-tools">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="nav nav-pills nav-stacked">
+        <li #if(!$!param || !$!param.bookType || $!param.bookType == '') class="active" #end><a href="book/search?readFlag=$!{param.readFlag}&buyFlag=$!{param.buyFlag}">所有</a></li>
+        <li #if($!param && $!param.bookType == '1') class="active" #end><a href="book/search?readFlag=$!{param.readFlag}&buyFlag=$!{param.buyFlag}&bookType=1">小说</a></li>
+        <li #if($!param && $!param.bookType == '4') class="active" #end><a href="book/search?readFlag=$!{param.readFlag}&buyFlag=$!{param.buyFlag}&bookType=4">文学</a></li>
+        <li #if($!param && $!param.bookType == '2') class="active" #end><a href="book/search?readFlag=$!{param.readFlag}&buyFlag=$!{param.buyFlag}&bookType=2">专业</a></li>
+        <li #if($!param && $!param.bookType == '3') class="active" #end><a href="book/search?readFlag=$!{param.readFlag}&buyFlag=$!{param.buyFlag}&bookType=3">生活</a></li>
+        <li #if($!param && $!param.bookType == '0') class="active" #end><a href="book/search?readFlag=$!{param.readFlag}&buyFlag=$!{param.buyFlag}&bookType=0">其它</a></li>
+      </ul>
+    </div>
+    <!-- /.box-body -->
+</div>
+  
+  

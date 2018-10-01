@@ -1,0 +1,6 @@
+package com.zbwang.calendar.service;
+
+public interface ICompressService {
+
+	byte[] compressPic(byte[] content, int outputWidth, int outputHeight, boolean proportion);
+}

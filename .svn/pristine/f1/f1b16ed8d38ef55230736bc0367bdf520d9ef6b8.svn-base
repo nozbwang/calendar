@@ -1,0 +1,30 @@
+package com.zbwang.calendar.service;
+
+import java.util.List;
+
+import org.apache.commons.fileupload.FileItem;
+
+import com.zbwang.calendar.domain.Attach;
+import com.zbwang.calendar.domain.Book;
+import com.zbwang.calendar.domain.Voice;
+
+public interface IAttachService {
+
+	Attach getOriginalAttachByAttachId(Integer attachId);
+
+	Attach getBigAttachByAttachId(Integer attachId);
+
+	Attach getSmallAttachByAttachId(Integer attachId);
+
+	void prepareVoiceAttach(List<Voice> latestVoiceGroup);
+
+	void prepareBookAttach(List<Book> books);
+
+	void compressPicture();
+
+	void insertLocalPicture(Integer userId, FileItem localPicture, String belongType, int belongId);
+
+	void deleteLocalPicture(Integer userId, String belongType, int belongId);
+
+	void insertLocalPicture(Integer userId, List<FileItem> localPictures, String belongType, int belongId);
+}

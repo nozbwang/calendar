@@ -1,0 +1,27 @@
+  <ul class="nav nav-pills nav-stacked">
+	
+	#if(!$!param)
+		#set($allBook=true)
+	#elseif(!$!param.readFlag && !$!param.buyFlag)
+		#set($allBook=true)
+	#elseif($!param.readFlag=='0')
+		#set($unread=true)
+	#elseif($!param.readFlag=='1')
+		#set($read=true)
+	#elseif($!param.buyFlag=='0')
+		#set($want=true)
+	#elseif($!param.buyFlag=='1')
+		#set($buy=true)
+	#end
+	
+    <li #if($allBook) class="active" #end><a href="book"><i class="fa fa-circle text-red"></i> 所有图书
+      <span class="label label-primary pull-right">$!bookNumber.totalNumber</span></a></li>
+	<li #if($buy) class="active" #end><a href="book/search?buyFlag=1"><i class="fa fa-circle text-green"></i> 已购
+      <span class="label label-primary pull-right" id="J-buy-number">$!bookNumber.buyNumber</span></a></li>
+	<li #if($want) class="active" #end><a href="book/search?buyFlag=0"><i class="fa fa-circle-o text-green"></i> 未购
+      <span class="label label-primary pull-right" id="J-unbuy-number">$!bookNumber.wantNumber</span></a></li>
+    <li #if($read) class="active" #end><a href="book/search?readFlag=1"><i class="fa fa-circle text-yellow"></i> 已读
+      <span class="label label-primary pull-right" id="J-read-number">$!bookNumber.readNumber</span></a></li>
+    <li #if($unread) class="active" #end><a href="book/search?readFlag=0"><i class="fa fa-circle-o text-yellow"></i> 未读
+      <span class="label label-primary pull-right" id="J-unread-number">$!bookNumber.unreadNumber</span></a></li>
+  </ul>

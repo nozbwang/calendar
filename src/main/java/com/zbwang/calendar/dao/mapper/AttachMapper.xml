@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zbwang.calendar.dao.IAttachDao">
+  <resultMap id="BaseResultMap" type="com.zbwang.calendar.domain.Attach">
+    <id column="attachment_id" jdbcType="INTEGER" property="attachmentId" />
+    <result column="belong_id" jdbcType="INTEGER" property="belongId" />
+    <result column="belong_type" jdbcType="VARCHAR" property="belongType" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="attachment_name" jdbcType="VARCHAR" property="attachmentName" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="size" jdbcType="INTEGER" property="size" />
+    <result column="width" jdbcType="INTEGER" property="width" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zbwang.calendar.domain.Attach">
+    <result column="content" jdbcType="LONGVARBINARY" property="content" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    attachment_id, belong_id, belong_type, user_id, attachment_name, type, size, width, 
+    height
+  </sql>
+
+  <sql id="Blob_Column_List">
+    <include refid="Base_Column_List"/>, content
+  </sql>
+  
+  <select id="getAttachByBelongIdGroup"  resultMap="BaseResultMap">
+    select
+    	<include refid="Base_Column_List"/>
+    from face_voice_attachment
+    where belong_type = #{belongType,jdbcType=VARCHAR}
+    AND
+     <foreach collection="belongIds" item="belongId" open="(" separator="or" close=")">
+   	 	belong_id = #{belongId,jdbcType=INTEGER}
+  	</foreach>
+  </select>
+  
+  <select id="getAttachByAttachId" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+      <include refid="Blob_Column_List"/>
+    from face_voice_attachment
+    where attachment_id = #{attachmentId,jdbcType=INTEGER}
+  </select>
+
+  <select id="listBelongAttachIds" parameterType="java.lang.String" resultType="long">
+    select attachment_id
+    from face_voice_attachment
+    where belong_type = #{belongType, jdbcType=VARCHAR}
+    order by add_time desc
+  </select>
+  
+  <select id="deleteLocalPicture" parameterType="com.zbwang.calendar.domain.Attach">
+    delete from face_voice_attachment
+    where belong_type = #{belongType,jdbcType=VARCHAR}
+    AND belong_id = #{belongId,jdbcType=INTEGER}
+  </select>
+
+  <update id="updateAttachBelong" parameterType="com.zbwang.calendar.domain.Attach">
+   update face_voice_attachment
+    set belong_id = #{belongId,jdbcType=INTEGER},
+        belong_type = #{belongType,jdbcType=INTEGER}
+    where attachment_id = #{attachmentId,jdbcType=INTEGER}
+    and belong_id is null
+    and user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  
+  <insert id="insertVoiceAttach" parameterType="com.zbwang.calendar.domain.Attach">
+    <selectKey keyProperty="attachmentId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into face_voice_attachment (belong_id, belong_type, user_id, 
+      attachment_name, type, size, 
+      width, height, add_time, 
+      content
+      )
+    values (#{belongId,jdbcType=INTEGER}, #{belongType,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{attachmentName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER}, 
+      #{width,jdbcType=INTEGER}, #{height,jdbcType=INTEGER}, now(), 
+      #{content,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+  
+</mapper>
